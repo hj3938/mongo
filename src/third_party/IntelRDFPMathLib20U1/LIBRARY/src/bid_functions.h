@@ -162,7 +162,7 @@ typedef unsigned bid__int64 fexcept_t;
 #ifdef __QNX__
 #include <fenv.h>
 #else
-typedef unsigned short int fexcept_t;
+//typedef unsigned short int fexcept_t;
 #endif
 #endif
 #endif
@@ -5170,9 +5170,9 @@ BID_UINT32  bid_wcstod32(const wchar_t*  ps_in, wchar_t**  endptr);
 BID_UINT64  bid_wcstod64(const wchar_t*  ps_in, wchar_t**  endptr);
 BID_UINT128 bid_wcstod128(const wchar_t*  ps_in, wchar_t**  endptr);
 void bid_feclearexcept( int excepts _EXC_FLAGS_PARAM );
-void bid_fegetexceptflag( fexcept_t *flagp, int excepts _EXC_FLAGS_PARAM );
+void bid_fegetexceptflag( unsigned    long *flagp, int excepts _EXC_FLAGS_PARAM );
 void bid_feraiseexcept( int excepts _EXC_FLAGS_PARAM );
-void bid_fesetexceptflag( const fexcept_t *flagp, int excepts _EXC_FLAGS_PARAM );
+void bid_fesetexceptflag( const unsigned    long *flagp, int excepts _EXC_FLAGS_PARAM );
 int bid_fetestexcept( int excepts _EXC_FLAGS_PARAM );
 
 // Internal Functions

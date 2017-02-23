@@ -1,0 +1,76 @@
+#!/bin/bash
+
+if [ -z "$2" ]; then
+    ARCH=arm
+else
+    ARCH="$2"
+fi
+
+CC_VER="4.9"
+case $ARCH in
+    arm)
+        DEST_CPU="$ARCH"
+        SUFFIX="$ARCH-linux-androideabi"
+        TOOLCHAIN_NAME="$SUFFIX"
+        ;;
+    aarch64)
+        DEST_CPU="$ARCH"
+        SUFFIX="$ARCH-linux-android"
+        TOOLCHAIN_NAME="$SUFFIX"
+        ;;
+    x86)
+        DEST_CPU="ia32"
+        SUFFIX="i686-linux-android"
+        TOOLCHAIN_NAME="$ARCH"
+        ;;
+    x86_64)
+        DEST_CPU="ia32"
+        SUFFIX="$ARCH-linux-android"
+        TOOLCHAIN_NAME="$ARCH"
+        ;;
+    *)
+        echo "Unsupported architecture provided: $ARCH"
+        exit 1
+        ;;
+esac
+
+export TOOLCHAIN=$PWD/android-toolchain
+mkdir -p $TOOLCHAIN
+$1/build/tools/make-standalone-toolchain.sh \
+    --toolchain=$TOOLCHAIN_NAME-$CC_VER \
+    --install-dir=$TOOLCHAIN \
+    --platform=android-21 \
+    --stl=libc++ \
+    --force
+
+export PATH=$TOOLCHAIN/bin:$PATH
+export AR=$TOOLCHAIN/bin/$SUFFIX-ar
+export CC=$TOOLCHAIN/bin/$SUFFIX-clang
+export CXX=$TOOLCHAIN/bin/$SUFFIX-clang++
+export LINK=$TOOLCHAIN/bin/$SUFFIX-clang++
+
+
+## ex    $ ./android-configure ~/android-ndk-r14-beta2/ arm
+## strip $ ./android-toolchain/arm-linux-androideabi/bin/strip -s mongod
+
+# __mulodi4
+cp $1/toolchains/renderscript/prebuilt/linux-x86_64/platform/arm/libcompiler_rt.a .
+$1/toolchains/$TOOLCHAIN_NAME-$CC_VER/prebuilt/linux-x86_64/$TOOLCHAIN_NAME/bin/ar x libcompiler_rt.a mulodi4.o
+
+cp "./android-toolchain/${SUFFIX}/lib/libc++_static.a" "./android-toolchain/sysroot/usr/lib/libc++.a"
+
+# https://github.com/morristech/android-ifaddrs
+cp ifaddrs.h android-toolchain/sysroot/usr/include/
+./android-toolchain/bin/clang --sysroot android-toolchain/sysroot/ -I./android-toolchain/include/c++/4.9.x/ -c ifaddrs.c
+
+scons \
+-j4 \
+--js-engine=none \
+--allocator=system \
+--mmapv1=on \
+--wiredtiger=off \
+--disable-warnings-as-errors=DISABLE-WARNINGS-AS-ERRORS \
+--libc++=LIBC++ \
+LINKFLAGS="./mulodi4.o -lc++_static -lc++abi -landroid_support -lunwind -latomic ./android-toolchain/${SUFFIX}/lib/libc++_shared.so ./ifaddrs.o" \
+CXXFLAGS="--sysroot android-toolchain/sysroot/ -I./android-toolchain/include/c++/4.9.x/" \
+CC=$CC CXX=$CXX

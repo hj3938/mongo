@@ -102,7 +102,8 @@ string errnoWithDescription(int errNumber) {
     char* msg{nullptr};
 
 #if defined(__GNUC__) && defined(_GNU_SOURCE)
-    msg = strerror_r(errNumber, buf, kBuflen);
+    strerror_r(errNumber, buf, kBuflen);
+    msg = buf;
 #elif defined(_WIN32)
 
     LPWSTR errorText = nullptr;

@@ -26,7 +26,11 @@
  */
 
 #define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kControl
-
+#if defined(__arm__) || defined(i386) || defined(__i386__)
+#define __ELF_NATIVE_CLASS 32
+#else
+#define __ELF_NATIVE_CLASS 64
+#endif
 #include "mongo/platform/basic.h"
 
 #include "mongo/util/stacktrace.h"

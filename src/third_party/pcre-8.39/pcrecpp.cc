@@ -819,8 +819,9 @@ bool Arg::parse_longlong_radix(const char* str,
   str = TerminateNumber(buf, str, n);
   char* end;
   errno = 0;
+
 #if defined HAVE_STRTOQ
-  long long r = strtoq(str, &end, radix);
+  long long r = strtoll(str, &end, radix);
 #elif defined HAVE_STRTOLL
   long long r = strtoll(str, &end, radix);
 #elif defined HAVE__STRTOI64
@@ -852,7 +853,7 @@ bool Arg::parse_ulonglong_radix(const char* str,
   char* end;
   errno = 0;
 #if defined HAVE_STRTOQ
-  unsigned long long r = strtouq(str, &end, radix);
+  unsigned long long r = strtoul(str, &end, radix);
 #elif defined HAVE_STRTOLL
   unsigned long long r = strtoull(str, &end, radix);
 #elif defined HAVE__STRTOI64

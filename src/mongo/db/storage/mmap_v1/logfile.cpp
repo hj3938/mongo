@@ -199,7 +199,11 @@ LogFile::~LogFile() {
 void LogFile::truncate() {
     verify(_fd >= 0);
 
+#if defined(__arm__) || defined(i386) || defined(__i386__)
+    MONGO_STATIC_ASSERT(sizeof(off_t) == 4);    // we don't want overflow here
+#else
     MONGO_STATIC_ASSERT(sizeof(off_t) == 8);    // we don't want overflow here
+#endif
     const off_t pos = lseek(_fd, 0, SEEK_CUR);  // doesn't actually seek
     if (ftruncate(_fd, pos) != 0) {
         msgasserted(15873, "Couldn't truncate file: " + errnoWithDescription());

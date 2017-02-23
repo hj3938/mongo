@@ -333,6 +333,7 @@ env.Library(
     target='serveronly',
     source=[
         'd_state.cpp',
+        'local_sharding_info.cpp',
         'sharding_egress_metadata_hook_for_mongod.cpp',
     ],
     LIBDEPS=[

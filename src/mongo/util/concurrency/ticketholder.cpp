@@ -36,6 +36,12 @@
 #include "mongo/util/log.h"
 #include "mongo/util/mongoutils/str.h"
 
+#if defined(__arm__) || defined(i386) || defined(__i386__)
+#define SEM_VALUE_MAX 32767
+#else
+#define SEM_VALUE_MAX 2147483647
+#endif
+
 namespace mongo {
 
 #if defined(__linux__)

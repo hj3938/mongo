@@ -295,43 +295,43 @@ public:
      * appendNumber is a series of method for appending the smallest sensible type
      * mostly for JS
      */
-    BSONObjBuilder& appendNumber(StringData fieldName, int n) {
-        return append(fieldName, n);
-    }
+    // BSONObjBuilder& appendNumber(StringData fieldName, int n) {
+    //     return append(fieldName, n);
+    // }
 
     BSONObjBuilder& appendNumber(StringData fieldName, double d) {
         return append(fieldName, d);
     }
 
-    BSONObjBuilder& appendNumber(StringData fieldName, size_t n) {
-        static const size_t maxInt = (1 << 30);
-        if (n < maxInt)
-            append(fieldName, static_cast<int>(n));
-        else
-            append(fieldName, static_cast<long long>(n));
-        return *this;
-    }
+    // BSONObjBuilder& appendNumber(StringData fieldName, size_t n) {
+    //     static const size_t maxInt = (1 << 30);
+    //     if (n < maxInt)
+    //         append(fieldName, static_cast<int>(n));
+    //     else
+    //         append(fieldName, static_cast<long long>(n));
+    //     return *this;
+    // }
 
     BSONObjBuilder& appendNumber(StringData fieldName, Decimal128 decNumber) {
         return append(fieldName, decNumber);
     }
 
-    BSONObjBuilder& appendNumber(StringData fieldName, long long llNumber) {
-        static const long long maxInt = (1LL << 30);
-        static const long long minInt = -maxInt;
-        static const long long maxDouble = (1LL << 40);
-        static const long long minDouble = -maxDouble;
+    // BSONObjBuilder& appendNumber(StringData fieldName, long long llNumber) {
+    //     static const long long maxInt = (1LL << 30);
+    //     static const long long minInt = -maxInt;
+    //     static const long long maxDouble = (1LL << 40);
+    //     static const long long minDouble = -maxDouble;
 
-        if (minInt < llNumber && llNumber < maxInt) {
-            append(fieldName, static_cast<int>(llNumber));
-        } else if (minDouble < llNumber && llNumber < maxDouble) {
-            append(fieldName, static_cast<double>(llNumber));
-        } else {
-            append(fieldName, llNumber);
-        }
+    //     if (minInt < llNumber && llNumber < maxInt) {
+    //         append(fieldName, static_cast<int>(llNumber));
+    //     } else if (minDouble < llNumber && llNumber < maxDouble) {
+    //         append(fieldName, static_cast<double>(llNumber));
+    //     } else {
+    //         append(fieldName, llNumber);
+    //     }
 
-        return *this;
-    }
+    //     return *this;
+    // }
 
     /** Append a double element */
     BSONObjBuilder& append(StringData fieldName, double n) {

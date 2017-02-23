@@ -33,7 +33,7 @@
 #include "bid_internal.h"
 
 
-void bid_fegetexceptflag( fexcept_t *flagp, int excepts _EXC_FLAGS_PARAM )
+void bid_fegetexceptflag(unsigned    long *flagp, int excepts _EXC_FLAGS_PARAM )
 {
 _IDEC_flags new_sw; 
 

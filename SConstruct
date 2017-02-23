@@ -2477,8 +2477,10 @@ def doConfigure(myenv):
             haveTriviallyConstructibleThreadLocals = True
             myenv.SetConfigHeaderDefine(macro_name)
     conf.Finish()
-    if not haveTriviallyConstructibleThreadLocals:
-        env.ConfError("Compiler must support a thread local storage class for trivially constructible types")
+    # if not haveTriviallyConstructibleThreadLocals:
+    #     env.ConfError("Compiler must support a thread local storage class for trivially constructible types")
+
+    myenv.SetConfigHeaderDefine('MONGO_CONFIG_HAVE___THREAD')
 
     # not all C++11-enabled gcc versions have type properties
     def CheckCXX11IsTriviallyCopyable(context):
